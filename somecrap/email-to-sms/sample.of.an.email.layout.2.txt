@@ -1,0 +1,14 @@
+Received: from zabbix-vm (unknown [192.168.0.87])
+	by email2smsgw (Postfix) with SMTP id 19B2F8182E
+	for <6588888888@sms.local>; Thu, 27 Feb 2014 18:47:34 +0800 (SGT)
+From: <zabbix@email2smsgw>
+To: <6588888888@sms.local>
+Date: Thu, 27 Feb 2014 18:47:26 +0800
+Subject: oivm3 - PROBLEM: Zabbix agent on oivm3 is unreachable for 5 minutes
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+VHJpZ2dlcjogWmFiYml4IGFnZW50IG9uIG9pdm0zIGlzIHVucmVhY2hhYmxlIGZvciA1IG1pbnV0
+ZXMNClRyaWdnZXIgc3RhdHVzOiBQUk9CTEVNDQpUcmlnZ2VyIHNldmVyaXR5OiBBdmVyYWdlDQpU
+cmlnZ2VyIFVSTDog

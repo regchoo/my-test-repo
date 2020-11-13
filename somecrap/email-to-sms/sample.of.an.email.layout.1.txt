@@ -1,0 +1,14 @@
+Received: from zabbix-vm (unknown [192.168.0.87])
+	by email2smsgw (Postfix) with SMTP id 060DF8182E
+	for <6588888888@sms.local>; Thu, 27 Feb 2014 18:44:04 +0800 (SGT)
+From: <zabbix@email2smsgw>
+To: <6588888888@sms.local>
+Date: Thu, 27 Feb 2014 18:43:56 +0800
+Subject: omni-vm - PROBLEM: Zabbix agent on omni-vm is unreachable for 5 minutes
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+VHJpZ2dlcjogWmFiYml4IGFnZW50IG9uIG9tbmktdm0gaXMgdW5yZWFjaGFibGUgZm9yIDUgbWlu
+dXRlcw0KVHJpZ2dlciBzdGF0dXM6IFBST0JMRU0NClRyaWdnZXIgc2V2ZXJpdHk6IEF2ZXJhZ2UN
+ClRyaWdnZXIgVVJMOiA=

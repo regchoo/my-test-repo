@@ -1,0 +1,13 @@
+#!/bin/sh
+# if you're using POSTFIX as your MTA
+
+
+tmp=$(mktemp /tmp/smsgw.XXXXXX)
+cat >$tmp
+OUTFILE=$(mktemp /var/spool/sms/outgoing/smsgw.out.XXXXXX)
+cat >$OUTFILE
+cat $tmp | grep "for" | cut -d "@" -f 1 | cut -d "<" -f 2 | sed -e 's/^/To: /' > $OUTFILE  
+cat $tmp | sed -n 7',$p' >> $OUTFILE
+  chmod 666 $OUTFILE
+  echo "SMS queued to $OUTFILE"
+rm $tmp

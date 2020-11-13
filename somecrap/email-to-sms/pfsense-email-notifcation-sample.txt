@@ -1,0 +1,10 @@
+From nobody Mon Mar  3 15:14:10 2014
+Received: from pfsense-vm1.localdomain (unknown [192.168.0.237])
+ by email2smsgw (Postfix) with ESMTP id 2D0F881917
+ for <6512341234@sms.local>; Mon,  3 Mar 2014 15:14:10 +0800 (SGT)
+From: pfsense-vm1@sms.local
+To: 6512341234@sms.local
+Subject: pfsense-vm1.localdomain - Notification
+Date: Mon, 03 Mar 2014 15:14:10 +0800
+
+This is a test message from pfSense.  It is safe to ignore this message.

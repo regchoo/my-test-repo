@@ -1,0 +1,15 @@
+#!/bin/sh
+# convert zabbix 2.2 email alerts
+# 
+
+tmp=$(mktemp /tmp/smsgw.XXXXXX)
+cat >$tmp
+OUTFILE=$(mktemp /var/spool/sms/outgoing/smsgw.out.XXXXXX)
+cat >$OUTFILE
+cat $tmp |  grep -e "sms.local" | cut -d "@" -f 1 | cut -d "<" -f 2 | sed -e 's/^/To: /' > $OUTFILE  
+#cat $tmp |  grep -e $'\tfor ' | cut -d "@" -f 1 | cut -d "<" -f 2 | sed -e 's/^/To: /' > $OUTFILE  
+echo -n ' ' >> $OUTFILE
+cat $tmp | awk '/Date:/{x=NR+1}(NR<=x){print}' >> $OUTFILE
+  chmod 666 $OUTFILE
+  echo "SMS queued to $OUTFILE"
+#####rm $tmp
