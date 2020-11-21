@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: test-namespace
+  name: nginx-pvc 
+  labels:
+    app: nginx
+spec:
+  storageClassName: private-nfs-storageclass
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
