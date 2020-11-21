@@ -1,0 +1,5 @@
+QTabBar::tab::selected {
+    background: #ff00ff;
+    color: #66ffff;
+    font-weight: bold;
+}
