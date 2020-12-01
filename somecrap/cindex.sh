@@ -8,10 +8,19 @@ INDEX="index.php"
 touch $INDEX
 
 CURRDIR=`pwd`
-echo "<?php \$HTML_ROOT=\"/var/www/html\"; include(\"\$HTML_ROOT/incl/header.inc\"); ?>" > $INDEX
-echo "<html><head>" >> $INDEX
-echo "<link rel=\"stylesheet\" href=\"/css/default.css\">" >> $INDEX
-echo "<title>Files in $CURRDIR</title><head><body bgcolor="lightgrey">" >> $INDEX
+
+cat << CONTENT > $INDEX
+<?php 
+$HTML_ROOT="/var/www/html";
+include("$HTML_ROOT/incl/header.inc");
+?>
+CONTENT
+
+
+#echo "<?php \$HTML_ROOT=\"/var/www/html\"; include(\"\$HTML_ROOT/incl/header.inc\"); ?>" > $INDEX
+#echo "<html><head>" >> $INDEX
+#echo "<link rel=\"stylesheet\" href=\"/css/default.css\">" >> $INDEX
+#echo "<title>Files in $CURRDIR</title><head><body bgcolor="lightgrey">" >> $INDEX
 #echo "<H2>Files in $CURRDIR</H2><HR>" >> $INDEX
 
 
@@ -30,7 +39,11 @@ for files in $THIS_DIRECTORY; do
     }
 done
 
-echo "<?php include(\"\$HTML_ROOT/incl/footer.inc\"); ?>" >> $INDEX
-
-echo "</body></html>" >> $INDEX
+cat << TAIL >> $INDEX
+<?php
+include("$HTML_ROOT/incl/footer.inc");
+?>
+TAIL
+#echo "<?php include(\"\$HTML_ROOT/incl/footer.inc\"); ?>" >> $INDEX
+#echo "</body></html>" >> $INDEX
 chmod 644 $INDEX
