@@ -1,0 +1,23 @@
+Tips for - "Perform Foundational Infrastructure Tasks in Google Cloud: Challenge Lab"
+=====================================================================================
+
+With appropriate preparation, this lab can be completed in 10 mins or less.
+
+Tip #1
+check out YT to see how others do it. (especially the Cloud Function portion)
+
+before you click [Start Lab];
+
+TIP #2
+- download the suggested image file from "https://storage.googleapis.com/cloud-training/gsp315/map.jpg" to your computer.
+  upload this image file to bucket after cloud function has been created
+
+Tip #3
+prepare ahead of time the following on a text editor (i suggest using notepad++ for Windows users)
+so that you can simply copy and paste to the cloud console during the lab
+- a unique bucket name
+- a topic name for the pub/sub creation
+- a cloud function name
+- copy out "index.js" onto your text editor and edit out "REPLACE_WITH_YOUR_TOPIC" with your topic name
+  then paste "index.js" back during Cloud Function creation
+- you may also copy out "package.json" onto your text editor, although nothing in this file needs to be changed.
