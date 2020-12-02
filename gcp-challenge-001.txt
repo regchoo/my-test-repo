@@ -21,7 +21,7 @@ cloud function creation settings:
 note that the function will take awhile to start up
 
 
-Tip #3
+Tip #4
 prepare ahead of time the following on a text editor (i suggest using notepad++ for Windows users)
 so that you can simply copy and paste to the cloud console during the lab
 - a unique bucket name
