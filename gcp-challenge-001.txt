@@ -9,8 +9,17 @@ check out YT to see how others do it. (especially the Cloud Function portion)
 before you click [Start Lab];
 
 TIP #2
-- download the suggested image file from "https://storage.googleapis.com/cloud-training/gsp315/map.jpg" to your computer.
-  upload this image file to bucket after cloud function has been created
+download the suggested image file from "https://storage.googleapis.com/cloud-training/gsp315/map.jpg" to your computer.
+upload this image file to bucket after cloud function has been created
+
+TIP #3
+cloud function creation settings:
+- Trigger type = Cloud Storage
+- Event type = Finalize/Create
+- select the bucket you had created
+- Entry point (for index.js) = thumbnail
+note that the function will take awhile to start up
+
 
 Tip #3
 prepare ahead of time the following on a text editor (i suggest using notepad++ for Windows users)
