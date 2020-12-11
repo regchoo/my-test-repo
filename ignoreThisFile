@@ -1,0 +1,4 @@
+this file should be ignored by git as it
+is included in ".gitignore"
+using git's ".gitignore" to ignore files
+so that these files dont get uploaded to the repo
