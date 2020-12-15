@@ -35,7 +35,7 @@ for FILES in $(ls *.yaml); do kubectl apply -f $FILES; done
 # kubectl apply -f service.yaml
 =================================================================================
 # TASK 2 -
-# TASK TO BE DONE USING CLOUD CONSOLE
+# TASK TO BE DONE USING CLOUD CONSOLE & SHELL
 
 # set up the admin instance
 gcloud config set compute/region us-east1
@@ -45,6 +45,7 @@ gcloud compute instances create kraken-admin \
  --network-interface="subnet=kraken-mgmt-subnet" \
  --network-interface="subnet=kraken-prod-subnet"
 
+# VIA CLOUD CONSOLE
 1. go to cloud console OPERATIONS>MONOTORING>ALERTING
 2. CREATE POLICY
 3. ADD CONDITION
@@ -74,8 +75,10 @@ DECK_POD=$(kubectl get pods -n default \
 kubectl port-forward -n default $DECK_POD 8080:9000 >> /dev/null &
 
 # click on "preview" icon above cloud shell terminal and select "Preview on port 8080"
-Applications > Sample > PIPELINES > 
 
+# on spinnaker web ui goto Applications > Sample > PIPELINES > 
+
+# run these commands via cloud shell
 gcloud config set compute/zone us-east1-b
 # pull sample-app from repo
 gcloud source repos clone sample-app
