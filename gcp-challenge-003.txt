@@ -1,0 +1,92 @@
+Challenge Lab: set up and configure a cloud environment in google cloud
+=======================================================================
+
+# TASK 1 - Create development VPC manually
+
+# set region/zone
+gcloud config set compute/region us-east1
+gcloud config set compute/zone us-east1-b
+
+gcloud compute networks create griffin-dev-vpc \
+    --subnet-mode=custom \
+    --bgp-routing-mode=regional
+
+gcloud compute networks subnets create griffin-dev-wp \
+    --network=griffin-dev-vpc \
+    --range=192.168.16.0/20 \
+    --region=us-east1    
+    
+gcloud compute networks subnets create griffin-dev-mgmt
+    --network=griffin-dev-vpc \
+    --range=192.168.32.0/20 \
+    --region=us-east1
+
+======================================================
+# TASK 2 - Create production VPC using Deployment Manager
+
+mkdir -m 777 /work
+cd /work
+gsutils cp -R gs://cloud-training/gsp321/dm .
+
+======================================================
+# TASK 3 - Create bastion host
+
+gcloud compute instances create bastion-vm \
+    --network-interface="subnet=griffin-dev-mgmt" \
+    --network-interface="subnet=griffin-prod-mgmt"
+
+# test ssh from host 
+
+======================================================
+# TASK 4 - Create and configure Cloud SQL Instance
+
+gcloud sql instances create griffin-dev-db \
+    --region=us-east1
+
+CREATE DATABASE wordpress;
+GRANT ALL PRIVILEGES ON wordpress.* TO "wp_user"@"%" IDENTIFIED BY "stormwind_rules";
+FLUSH PRIVILEGES;
+
+======================================================
+# TASK 5 - Create Kubernetes cluster
+
+gcloud container clusters create griffin-dev \
+    --num-nodes=2 \
+    --network=griffin-dev-vpc \
+    --subnetwork=griffin-dev-wp \
+    --zone=us-east1-b
+    
+=======================================================
+# TASK 6 - Prepare the Kubernetes cluster
+cd /work
+gsutils cp -R gs://cloud-training/gsp321/wp-k8s .
+
+# edit wp-env.yaml
+# username to wp_user and password to stormwind_rules
+
+gcloud iam service-accounts keys create key.json \
+    --iam-account=cloud-sql-proxy@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
+kubectl create secret generic cloudsql-instance-credentials \
+    --from-file key.json
+
+=======================================================
+# TASK 7 - Create a WordPress deployment
+
+=======================================================
+# TASK 8 - Enable monitoring
+
+1. go to cloud console OPERATIONS>MONOTORING>ALERTING
+2. CREATE POLICY
+3. ADD CONDITION
+4. VM Instance (gce_instance)
+5. CPU utilization
+6. Filter > instance_name > workpress-mon
+7. Configuration > Threshold 50% > ADD
+8. NEXT > Notification Channel > MANAGE NOTIFICATION CHANNELS > EMAIL > ADD
+    (use the lab student's ID,  use "wordpress" for display name)
+9. select the display name you created above
+10. set Alert name as "wordpress-mom"
+
+
+=======================================================
+# TASK 9 - Provide access for an additional engineer
