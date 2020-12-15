@@ -118,7 +118,7 @@ kubectl apply -f wp-service.yaml
 
 kubectl get svc
 # look for wordpress external ip address under EXTERNAL-IP
-
+# OR
 # get ip address for wordpress via Cloud Console > Kubernetes Engine > Workloads > EXposing services
 # via web browser, goto the ip address
  
