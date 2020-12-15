@@ -16,7 +16,7 @@ gcloud compute networks subnets create griffin-dev-wp \
     --range=192.168.16.0/20 \
     --region=us-east1    
     
-gcloud compute networks subnets create griffin-dev-mgmt
+gcloud compute networks subnets create griffin-dev-mgmt \
     --network=griffin-dev-vpc \
     --range=192.168.32.0/20 \
     --region=us-east1
@@ -24,16 +24,31 @@ gcloud compute networks subnets create griffin-dev-mgmt
 ======================================================
 # TASK 2 - Create production VPC using Deployment Manager
 
-mkdir -m 777 /work
-cd /work
-gsutils cp -R gs://cloud-training/gsp321/dm .
+gsutil cp -r gs://cloud-training/gsp321/dm .
+cd dm
+
+# edit prod-network.yaml and replace SET_REGION with us-east1
+gcloud deployment-manager deployments create prod-network \
+    --config=prod-network.yaml
 
 ======================================================
 # TASK 3 - Create bastion host
 
 gcloud compute instances create bastion-vm \
-    --network-interface="subnet=griffin-dev-mgmt" \
-    --network-interface="subnet=griffin-prod-mgmt"
+    --network-interface=network=griffin-dev-vpc,subnet=griffin-dev-mgmt \
+    --network-interface=network=griffin-prod-vpc,subnet=griffin-prod-mgmt
+
+gcloud compute firewall-rules create fw-allow-ssh-dev \
+    --source-ranges=0.0.0.0/0 \
+    --target-tags ssh \
+    --allow=tcp:22 \
+    --network=griffin-dev-vpc
+
+gcloud compute firewall-rules create fw-allow-ssh-prod \
+    --source-ranges=0.0.0.0/0 \
+    --target-tags ssh \
+    --allow=tcp:22 \
+    --network=griffin-prod-vpc
 
 # test ssh from host 
 
@@ -41,52 +56,87 @@ gcloud compute instances create bastion-vm \
 # TASK 4 - Create and configure Cloud SQL Instance
 
 gcloud sql instances create griffin-dev-db \
+    --root-password password \
     --region=us-east1
+
+# mysql root user password is "password"
+gcloud sql connect griffin-dev-db
 
 CREATE DATABASE wordpress;
 GRANT ALL PRIVILEGES ON wordpress.* TO "wp_user"@"%" IDENTIFIED BY "stormwind_rules";
 FLUSH PRIVILEGES;
 
+# exit mysql when done
+
 ======================================================
 # TASK 5 - Create Kubernetes cluster
 
 gcloud container clusters create griffin-dev \
+    --machine-type=n1-standard-4 \
     --num-nodes=2 \
     --network=griffin-dev-vpc \
     --subnetwork=griffin-dev-wp \
     --zone=us-east1-b
+
+# copy out credentials from gke master node for use in TASK #6
+gcloud container clusters get-credentials griffin-dev
     
 =======================================================
 # TASK 6 - Prepare the Kubernetes cluster
-cd /work
-gsutils cp -R gs://cloud-training/gsp321/wp-k8s .
 
-# edit wp-env.yaml
-# username to wp_user and password to stormwind_rules
+# username : wp_user
+# password : stormwind_rules
+
+# change directory back to home
+cd
+
+gsutil cp -r gs://cloud-training/gsp321/wp-k8s .
+cd wb-k8s
+# edit wp-env.yaml file
+# replace "username_goes_here" with "wp_user"
+# replace "password_goes_here" with "stormwind_rules"
+
+kubectl apply -f wp-env.yaml
 
 gcloud iam service-accounts keys create key.json \
     --iam-account=cloud-sql-proxy@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
+
 kubectl create secret generic cloudsql-instance-credentials \
     --from-file key.json
 
+I=$(gcloud sql instances describe griffin-dev-db \
+    --format="value(connectionName)")
+
+# use stream editor to substitute YOUR_SQL_INSTANCE with value in $I
+sed -i s/YOUR_SQL_INSTANCE/$I/g wp-deployment.yaml
+
+kubectl apply -f wp-deployment.yaml
+kubectl apply -f wp-service.yaml
+    
 =======================================================
 # TASK 7 - Create a WordPress deployment
 
+kubectl get svc
+# look for wordpress external ip address under EXTERNAL-IP
+
+# get ip address for wordpress via Cloud Console > Kubernetes Engine > Workloads > EXposing services
+# via web browser, goto the ip address
+ 
 =======================================================
 # TASK 8 - Enable monitoring
 
-1. go to cloud console OPERATIONS>MONOTORING>ALERTING
-2. CREATE POLICY
-3. ADD CONDITION
-4. VM Instance (gce_instance)
-5. CPU utilization
-6. Filter > instance_name > workpress-mon
-7. Configuration > Threshold 50% > ADD
-8. NEXT > Notification Channel > MANAGE NOTIFICATION CHANNELS > EMAIL > ADD
-    (use the lab student's ID,  use "wordpress" for display name)
-9. select the display name you created above
-10. set Alert name as "wordpress-mom"
+1. go to cloud console OPERATIONS>MONOTORING>Uptime checks
+2. CREATE UPTIME CHECK
+3. Title : wp-uptime-check
+4. Target > protocol > HTTP
+5. Hostname : <EXTERNAL-IP-ADDRESS-OF-WORDPRESS>
+6. Path : /
+7. next > next > test > create
 
 
 =======================================================
 # TASK 9 - Provide access for an additional engineer
+
+# Cloud Console IAM & Admin > IAM > ADD
+# New members : < enter "Username 2"'s ID >
+# Role : Editor
